@@ -7,15 +7,39 @@
 
 import SwiftUI
 
+class TabSelectionManager: ObservableObject {
+    @Published var selectedTab: Int = 0
+}
+
 struct ContentView: View {
+    
+    @StateObject var tabSelectionManager = TabSelectionManager()
+
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            
+        TabView(selection: $tabSelectionManager.selectedTab) {
+            SummaryView(expenseViewModel: ExpenseViewModel())
+                .environmentObject(tabSelectionManager)
+                .tabItem {
+                    Label("Overview", systemImage: "house.fill")
+                }
+                .tag(0)
+            
+            AddExpenseView(expenseViewModel: ExpenseViewModel())
+                .environmentObject(tabSelectionManager)
+                .tabItem {
+                    Label("Add Expense", systemImage: "plus.app.fill")
+                }
+                .tag(1)
+
+            ExpenseListView(expenseViewModel: ExpenseViewModel())
+                .environmentObject(tabSelectionManager)
+                .tabItem {
+                    Label("Expenses", systemImage: "dollarsign.square.fill")
+                }
+                .tag(2)
         }
-        .padding()
     }
 }
 
