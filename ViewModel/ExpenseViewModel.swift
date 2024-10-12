@@ -7,6 +7,11 @@
 
 import Foundation
 
+struct ExchangeRatesResponse: Codable {
+    let usd: [String: Double]
+}
+
+
 class ExpenseViewModel: ObservableObject {
     @Published var expenses: [Expense] = []
     @Published var totalSpent: Double = 0.0
@@ -15,13 +20,33 @@ class ExpenseViewModel: ObservableObject {
                 sortExpenses()
             }
         }
+    @Published var exchangeRate: Double = 1.0
+    @Published var selectedCurrency: String = "USD" {
+            didSet {
+                fetchExchangeRates()
+            }
+        }
     
     private var coreDataManager = CoreDataManager.shared
 
     init() {
         loadExpenses()
+        fetchExchangeRates()
     }
-
+    
+    var currencySymbol: String {
+        switch selectedCurrency {
+        case "USD", "AUD":
+            return "$"
+        case "EUR":
+            return "€"
+        case "GBP":
+            return "£"
+        default:
+            return "$"
+        }
+    }
+    
     func addExpense(_ expense: Expense) {
         expenses.append(expense)
         coreDataManager.saveExpense(expense)
@@ -39,7 +64,7 @@ class ExpenseViewModel: ObservableObject {
     }
 
     func calculateTotalSpent() {
-        totalSpent = expenses.reduce(0) { $0 + $1.amount }
+        totalSpent = expenses.reduce(0) { $0 + $1.amount } * exchangeRate
     }
     
     func formatDate(_ date: Date) -> String {
@@ -62,6 +87,51 @@ class ExpenseViewModel: ObservableObject {
         case .category:
             expenses.sort { $0.category < $1.category }
         }
+    }
+    
+    func fetchExchangeRates() {
+        let baseCurrency = "usd" // We store data in USD
+        
+        guard selectedCurrency != baseCurrency.uppercased() else {
+            self.exchangeRate = 1.0
+            calculateTotalSpent()
+            return
+        }
+
+        let urlString = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/\(baseCurrency).json"
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+
+        URLSession.shared.dataTask(with: url) { data, _, error in
+            if let error = error {
+                print("Failed to fetch rates: \(error)")
+                return
+            }
+
+            guard let data = data else {
+                print("No data received")
+                return
+            }
+
+            do {
+                // Decode only the USD rates and ignore the date
+                let decodedData = try JSONDecoder().decode(ExchangeRatesResponse.self, from: data)
+
+                // Safely unwrap the selected currency's rate
+                if let newRate = decodedData.usd[self.selectedCurrency.lowercased()] {
+                    DispatchQueue.main.async {
+                        self.exchangeRate = newRate
+                        self.calculateTotalSpent()
+                    }
+                } else {
+                    print("Exchange rate not found for selected currency")
+                }
+            } catch {
+                print("Failed to decode JSON: \(error)")
+            }
+        }.resume()
     }
     
 }

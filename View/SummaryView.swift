@@ -17,12 +17,16 @@ struct CategoryExpense: Identifiable {
 extension ExpenseViewModel {
     func totalExpensesByCategory() -> [CategoryExpense] {
         let groupedByCategory = Dictionary(grouping: expenses, by: { $0.category })
-        return groupedByCategory.map { category, expenses in
+        
+        let categoryExpenses = groupedByCategory.map { category, expenses in
             CategoryExpense(
                 category: category,
-                totalAmount: expenses.reduce(0) { $0 + $1.amount }
+                totalAmount: expenses.reduce(0) { $0 + ($1.amount * exchangeRate) }
             )
         }
+        
+        // Sort categories alphabetically (or change to custom sorting logic if needed)
+        return categoryExpenses.sorted { $0.category < $1.category }
     }
 }
 
@@ -57,10 +61,18 @@ struct SummaryView: View {
             // Total
             VStack {
                 HStack {
-                    Text("Total Spent: $\(expenseViewModel.totalSpent, specifier: "%.2f")")
+                    Text("Total Spent: \(expenseViewModel.currencySymbol)\(expenseViewModel.totalSpent, specifier: "%.2f")")
                         .bold()
                         .font(.system(size: 20))
                     Spacer()
+                    Picker("Currency", selection: $expenseViewModel.selectedCurrency) {
+                        Text("USD").tag("USD")
+                        Text("AUD").tag("AUD")
+                        Text("EUR").tag("EUR")
+                        Text("GBP").tag("GBP")
+                    }
+                    .pickerStyle(MenuPickerStyle())
+                    .frame(width: 100)
                 }
                 .padding()
             
@@ -77,7 +89,7 @@ struct SummaryView: View {
                                     .font(.system(size: 16))
                                     .bold()
                                 
-                                Text(String(format: "$%.2f", expense.totalAmount))
+                                Text("\(expenseViewModel.currencySymbol)\(expense.totalAmount, specifier: "%.2f")")
                                     .font(.system(size: 18))
                             }
                         }

@@ -32,12 +32,23 @@ struct ExpenseListView: View {
             
             // Total
             HStack {
-                Text("Total Spent: $\(expenseViewModel.totalSpent, specifier: "%.2f")")
+                Text("Total Spent: \(expenseViewModel.currencySymbol)\(expenseViewModel.totalSpent, specifier: "%.2f")")
                     .bold()
                     .font(.system(size: 20))
                 Spacer()
+                Picker("Currency", selection: $expenseViewModel.selectedCurrency) {
+                    Text("USD").tag("USD")
+                    Text("AUD").tag("AUD")
+                    Text("EUR").tag("EUR")
+                    Text("GBP").tag("GBP")
+                }
+                .pickerStyle(MenuPickerStyle())
+                .frame(width: 100)
+                .padding(.trailing, 10)
             }
             .padding()
+            
+            
             
             // Sorting Drop-down Picker
             HStack {
@@ -70,7 +81,7 @@ struct ExpenseListView: View {
                             .bold()
                             .font(.system(size: 20))
                         Spacer()
-                        Text("$\(expense.amount, specifier: "%.2f")")
+                        Text("\(expenseViewModel.currencySymbol)\(expense.amount * expenseViewModel.exchangeRate, specifier: "%.2f")")
                             .font(.system(size: 20))
                             .foregroundColor(.red)
                             .bold()
