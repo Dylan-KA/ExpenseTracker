@@ -14,32 +14,34 @@ class TabSelectionManager: ObservableObject {
 struct ContentView: View {
     
     @StateObject var tabSelectionManager = TabSelectionManager()
-
+    @StateObject var expenseViewModel = ExpenseViewModel()
     
     var body: some View {
-            
+                    
         TabView(selection: $tabSelectionManager.selectedTab) {
-            SummaryView(expenseViewModel: ExpenseViewModel())
+            
+            SummaryView(expenseViewModel: expenseViewModel)
                 .environmentObject(tabSelectionManager)
                 .tabItem {
                     Label("Overview", systemImage: "house.fill")
                 }
                 .tag(0)
             
-            AddExpenseView(expenseViewModel: ExpenseViewModel())
+            AddExpenseView(expenseViewModel: expenseViewModel)
                 .environmentObject(tabSelectionManager)
                 .tabItem {
                     Label("Add Expense", systemImage: "plus.app.fill")
                 }
                 .tag(1)
 
-            ExpenseListView(expenseViewModel: ExpenseViewModel())
+            ExpenseListView(expenseViewModel: expenseViewModel)
                 .environmentObject(tabSelectionManager)
                 .tabItem {
                     Label("Expenses", systemImage: "dollarsign.square.fill")
                 }
                 .tag(2)
         }
+        
     }
 }
 

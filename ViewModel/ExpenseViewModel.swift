@@ -10,6 +10,7 @@ import Foundation
 class ExpenseViewModel: ObservableObject {
     @Published var expenses: [Expense] = []
     @Published var totalSpent: Double = 0.0
+    @Published var sortOption: SortOption = .date
     
     private var coreDataManager = CoreDataManager.shared
 
@@ -39,8 +40,8 @@ class ExpenseViewModel: ObservableObject {
     
     func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateStyle = .medium   // You can choose different styles like .short, .long, etc.
-        formatter.timeStyle = .none     // Set to .none if you don't want to show the time
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
         return formatter.string(from: date)
     }
 

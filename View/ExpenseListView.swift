@@ -7,6 +7,16 @@
 
 import SwiftUI
 
+enum SortOption: String, CaseIterable, Identifiable {
+    case date = "Date"
+    case priceLowToHigh = "Price Lowest"
+    case priceHighToLow = "Price Highest"
+    case alphabetical = "Alphabetical"
+    case category = "Category"
+    
+    var id: String { self.rawValue }
+}
+
 struct ExpenseListView: View {
     @ObservedObject var expenseViewModel :ExpenseViewModel
 
@@ -18,7 +28,7 @@ struct ExpenseListView: View {
                     .font(.system(size: 40))
                 Spacer()
             }
-            .padding(20)
+            .padding(.horizontal)
             
             // Total
             HStack {
@@ -27,7 +37,30 @@ struct ExpenseListView: View {
                     .font(.system(size: 20))
                 Spacer()
             }
-            .padding(20)
+            .padding()
+            
+            // Sorting Picker
+            HStack {
+                HStack {
+                    Image(systemName: "arrow.up.arrow.down")
+                        .padding(.horizontal, 10)
+                    Text("Sort by")
+                        .bold()
+                    Spacer()
+                    Picker("Sort by", selection: $expenseViewModel.sortOption) {
+                        ForEach(SortOption.allCases) { option in
+                            Text(option.rawValue).tag(option)
+                        }
+                    }
+                    .pickerStyle(MenuPickerStyle())
+                    .frame(height: 38)
+                    
+                }
+                .background(Color.gray.opacity(0.1))
+                .cornerRadius(10)
+                .padding(.horizontal)
+                Spacer()
+            }
             
             // List
             List(expenseViewModel.expenses) { expense in
@@ -50,14 +83,10 @@ struct ExpenseListView: View {
                     }
                 }
             }
-            .navigationTitle("Expenses")
-            .toolbar {
-                Button(action: {
-                    // Trigger add new expense
-                }) {
-                    Text("Add")
-                }
-            }
+            .scrollContentBackground(.hidden)
+            .background(Color.white)
+            .frame(height: 550)
+            Spacer()
         }
     }
 }

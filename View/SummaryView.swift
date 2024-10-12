@@ -35,27 +35,75 @@ struct SummaryView: View {
             
             // Title
             HStack {
-                Text("Overview")
+                Text("Welcome to Expense Tracker")
                     .font(.system(size: 40))
                 Spacer()
             }
-            .padding(20)
+            .padding(.horizontal)
             
-            Spacer()
+            // Total
+            HStack {
+                Text("Total Spent: $\(expenseViewModel.totalSpent, specifier: "%.2f")")
+                    .bold()
+                    .font(.system(size: 20))
+                Spacer()
+            }
+            .padding()
             
+            
+            // Chart
             Chart(expenseViewModel.totalExpensesByCategory()) { expense in
                 SectorMark(
                     angle: .value("Total", expense.totalAmount),
                     innerRadius: .ratio(0.5),
                     angularInset: 1.0
                 )
-                .foregroundStyle(by: .value("Category", expense.category))
+                .foregroundStyle(colorForCategory(expense.category))
             }
             .chartLegend(.visible)
-            .frame(height: 500)
-            Spacer()
+            .frame(height: 300)
+            
+            // Chart Legend
+            VStack(alignment: .leading) {
+                ForEach(expenseViewModel.totalExpensesByCategory()) { expense in
+                    HStack {
+                        Circle()
+                            .fill(colorForCategory(expense.category))
+                            .frame(width: 10, height: 10)
+                        
+                        Text(expense.category)
+                            .font(.system(size: 16, weight: .bold))
+                        
+                        Spacer()
+                        
+                        Text(String(format: "%.2f", expense.totalAmount))
+                            .font(.system(size: 18))
+                            .bold()
+                    }
+                }
+            }
+            .padding()
         }
         .padding()
+        Spacer()
+    }
+}
+
+// Function to determine color for each category
+func colorForCategory(_ category: String) -> Color {
+    switch category {
+    case "Food":
+        return .blue
+    case "Entertainment":
+        return .green
+    case "Transportation":
+        return .orange
+    case "Shopping":
+        return .purple
+    case "Utilities":
+        return .yellow
+    default:
+        return .gray
     }
 }
 
