@@ -11,7 +11,7 @@ import CoreData
 class CoreDataManager {
     static let shared = CoreDataManager()
     
-    // MARK: - Core Data Stack
+    // Core Data Stack
     private let persistentContainer: NSPersistentContainer
     
     private init() {
@@ -23,7 +23,7 @@ class CoreDataManager {
         }
     }
     
-    // MARK: - Save Expense
+    // Save Expense
     func saveExpense(_ expense: Expense) {
         let context = persistentContainer.viewContext
         
@@ -41,7 +41,7 @@ class CoreDataManager {
         }
     }
     
-    // MARK: - Fetch Expenses
+    // Fetch Expenses
     func fetchExpenses() -> [Expense] {
         let context = persistentContainer.viewContext
         let fetchRequest: NSFetchRequest<ExpenseEntity> = ExpenseEntity.fetchRequest()
@@ -61,7 +61,7 @@ class CoreDataManager {
         }
     }
     
-    // MARK: - Delete Expense
+    // Delete Expense
     func deleteExpense(_ expense: Expense) {
         let context = persistentContainer.viewContext
         let fetchRequest: NSFetchRequest<ExpenseEntity> = ExpenseEntity.fetchRequest()

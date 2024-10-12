@@ -39,7 +39,7 @@ struct ExpenseListView: View {
             }
             .padding()
             
-            // Sorting Picker
+            // Sorting Drop-down Picker
             HStack {
                 HStack {
                     Image(systemName: "arrow.up.arrow.down")

@@ -50,19 +50,19 @@ class ExpenseViewModel: ObservableObject {
     }
 
     private func sortExpenses() {
-            switch sortOption {
-            case .date:
-                expenses.sort { $0.date > $1.date }
-            case .priceLowToHigh:
-                expenses.sort { $0.amount < $1.amount }
-            case .priceHighToLow:
-                expenses.sort { $0.amount > $1.amount }
-            case .alphabetical:
-                expenses.sort { $0.title < $1.title }
-            case .category:
-                expenses.sort { $0.category < $1.category }
-            }
+        switch sortOption {
+        case .date:
+            expenses.sort { $0.date > $1.date }
+        case .priceLowToHigh:
+            expenses.sort { $0.amount < $1.amount }
+        case .priceHighToLow:
+            expenses.sort { $0.amount > $1.amount }
+        case .alphabetical:
+            expenses.sort { $0.title < $1.title }
+        case .category:
+            expenses.sort { $0.category < $1.category }
         }
+    }
     
 }
 

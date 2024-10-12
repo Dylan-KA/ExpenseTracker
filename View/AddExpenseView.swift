@@ -25,7 +25,7 @@ struct AddExpenseView: View {
             }
             .padding(20)
             
-            // Form
+            // Choose Category Button
             TextField("Title", text: $title)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding(.horizontal)
@@ -49,6 +49,7 @@ struct AddExpenseView: View {
                       
             Spacer()
             
+            // Add Expense Button
             Button("Add Expense") {
                 if let amountDouble = Double(amount), category != "none" {
                     let newExpense = Expense(title: title, category: category, amount: amountDouble, date: Date())
