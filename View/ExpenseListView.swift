@@ -70,7 +70,7 @@ struct ExpenseListView: View {
                             .bold()
                             .font(.system(size: 20))
                         Spacer()
-                        Text("-$\(expense.amount, specifier: "%.2f")")
+                        Text("$\(expense.amount, specifier: "%.2f")")
                             .font(.system(size: 20))
                             .foregroundColor(.red)
                             .bold()
