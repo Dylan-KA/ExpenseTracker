@@ -45,6 +45,9 @@ struct ExpenseListView: View {
                 .pickerStyle(MenuPickerStyle())
                 .frame(width: 100)
                 .padding(.trailing, 10)
+                .onChange(of: expenseViewModel.selectedCurrency) { oldValue, newValue in
+                    expenseViewModel.saveCurrencyPreference(newValue)
+                }
             }
             .padding()
             

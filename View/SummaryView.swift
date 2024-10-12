@@ -73,6 +73,10 @@ struct SummaryView: View {
                     }
                     .pickerStyle(MenuPickerStyle())
                     .frame(width: 100)
+                    .onChange(of: expenseViewModel.selectedCurrency) { oldValue, newValue in
+                        expenseViewModel.saveCurrencyPreference(newValue)
+                    }
+                    
                 }
                 .padding()
             

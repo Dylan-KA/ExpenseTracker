@@ -31,6 +31,7 @@ class ExpenseViewModel: ObservableObject {
 
     init() {
         loadExpenses()
+        loadCurrencyPreference()
         fetchExchangeRates()
     }
     
@@ -89,8 +90,22 @@ class ExpenseViewModel: ObservableObject {
         }
     }
     
+    // Save the selected currency in UserDefaults
+    func saveCurrencyPreference(_ currency: String) {
+        UserDefaults.standard.set(currency, forKey: "selectedCurrency")
+    }
+
+    // Retrieve the saved currency from UserDefaults
+    func loadCurrencyPreference() {
+        if let savedCurrency = UserDefaults.standard.string(forKey: "selectedCurrency") {
+            selectedCurrency = savedCurrency
+        } else {
+            selectedCurrency = "USD"
+        }
+    }
+    
     func fetchExchangeRates() {
-        let baseCurrency = "usd" // We store data in USD
+        let baseCurrency = "usd" // Data in app is stored in USD
         
         guard selectedCurrency != baseCurrency.uppercased() else {
             self.exchangeRate = 1.0
