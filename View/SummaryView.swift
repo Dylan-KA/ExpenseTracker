@@ -62,6 +62,7 @@ struct SummaryView: View {
             }
             .chartLegend(.visible)
             .frame(height: 300)
+            .padding()
             
             // Chart Legend
             VStack(alignment: .leading) {
@@ -73,19 +74,15 @@ struct SummaryView: View {
                         
                         Text(expense.category)
                             .font(.system(size: 16, weight: .bold))
-                        
-                        Spacer()
-                        
+                                                
                         Text(String(format: "%.2f", expense.totalAmount))
                             .font(.system(size: 18))
                             .bold()
                     }
                 }
             }
-            .padding()
+            Spacer()
         }
-        .padding()
-        Spacer()
     }
 }
 
