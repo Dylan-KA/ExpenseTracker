@@ -46,7 +46,7 @@ struct AddExpenseView: View {
             .background(Color.gray.opacity(0.1))
             .cornerRadius(10)
             .padding(.horizontal)
-            
+                      
             Spacer()
             
             Button("Add Expense") {
@@ -61,12 +61,11 @@ struct AddExpenseView: View {
             .foregroundColor(.white)
             .font(.title2)
             .frame(maxWidth: .infinity)
-            .frame(height: 38)
+            .frame(height: 60)
             .background(Color.blue)
-            .cornerRadius(12)
+            .cornerRadius(15)
             .padding(.horizontal)
-
-            Spacer()
+            .padding(.vertical, 50)
         }
     }
 }
